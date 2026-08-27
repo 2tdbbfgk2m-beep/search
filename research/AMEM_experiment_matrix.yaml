@@ -1,0 +1,148 @@
+project:
+  name: amem_graph_forgetting
+  language: zh-CN
+  plan_version: "1.0"
+  date: "2026-08-27"
+  objective: "在 A-MEM 的结构化、演化记忆上学习预算驱动的图感知遗忘与延迟后悔归因"
+  execution_rule: "每次只执行一个 stage；当前 gate PASS 前不得进入下一 stage"
+
+tracks:
+  reference:
+    purpose: "尽量复现 A-MEM 论文报告设置"
+    models: ["GPT-4o-mini", "论文中可用的本地模型"]
+    results_namespace: "reference"
+  extension:
+    purpose: "主研究轨；所有策略使用相同固定模型"
+    recommended_model: "Qwen2.5-3B-Instruct"
+    fallback_rule: "STAGE 0 记录后才可替换；替换后不得与 reference 混表"
+    results_namespace: "extension"
+
+stages:
+  stage0:
+    name: "环境、仓库和数据审计"
+    depends_on: []
+    implementation: false
+    outputs: ["audit_report", "model_manifest", "dataset_manifest", "smoke_run", "gate"]
+    pass_if:
+      - "端到端 write-link-evolve-retrieve-answer smoke 成功"
+      - "每个 memory 可追溯 source_turn_ids"
+      - "明确 links 是否参与 query-time retrieval"
+  stage1:
+    name: "忠实复现 A-MEM 与事件/演化血缘"
+    depends_on: [stage0]
+    implementation: "instrumentation_only"
+    outputs: ["amem_baseline", "snapshot_replay_test", "retrieval_semantics_audit", "gate"]
+    pass_if:
+      - "在线状态与 replay 状态 hash 一致率 100%"
+      - "演化更新保存 before/after version"
+  stage2:
+    name: "增长、污染和预算动机"
+    depends_on: [stage1]
+    policies: [KeepAll, Random, FIFO, LRU, MemoryBankDecay, TFIDFContent, CURATORLite]
+    scenarios: [growth, stale_update, redundancy, conflict, budget_curve]
+    budgets: [0.1, 0.2, 0.4, 0.6, 0.8, 1.0]
+    pass_if_any:
+      - "keep-all 质量随污染或长时延显著下降"
+      - "预算方法减少 >=40% active tokens 且 QA 回退 <=2pp"
+      - "keep-all 超预算而预算方法满足约束且质量不劣"
+  stage3:
+    name: "平面 learned utility"
+    depends_on: [stage2]
+    labels: [gold_evidence, log_self_supervised, counterfactual_optional]
+    models: [FlatUtilityLogistic, FlatUtilityTFIDF, FlatUtilityMLP_optional]
+    features: [age, recency, position, length, retrieval_history, update_count, novelty, duplicate, contradiction_prefix]
+    forbidden_features: [future_question, future_answer, future_graph, test_gold_evidence]
+    pass_if:
+      - "held-out AUC > 0.5 且优于最强非学习规则"
+      - "至少两个预算点 QA +2pp 或同 QA 下预算节省 >=10%"
+  stage4:
+    name: "冻结 A-MEM Forgetting Benchmark"
+    depends_on: [stage1, stage2]
+    scenario_types: [delay, update, conflict, redundancy, bridge, evolution]
+    smoke_per_type: 10
+    pilot_per_type: 75
+    confirmatory_per_type: 250
+    splits: [dev, pilot, test]
+    pass_if:
+      - "程序化 gold answer/evidence 校验 100%"
+      - "test manifest checksum 已冻结"
+      - "bridge 的 flat-retrieval/graph-retrieval 轨已分开"
+  stage5:
+    name: "图感知 learned forgetting"
+    depends_on: [stage3, stage4]
+    models: [F0_Flat, F1_Topology, F2_Evolution, F3_OracleDiagnostic, GNN_optional]
+    topology_features: [degree, weighted_degree, component_size, approximate_betweenness, articulation_flag, pagerank, boundary_ratio, neighbor_score]
+    evolution_features: [in_degree, out_degree, descendant_count_1hop, descendant_count_2hop, version_count, time_since_evolution, changed_field_fraction]
+    retrieval_tracks: [faithful_flat, graph_expansion_if_supported]
+    pass_if:
+      - "F2 相比 F0 在 evolution/bridge WFR 相对下降 >=20% 或 QA +5pp"
+      - "普通 LoCoMo QA 回退不超过 1pp，或有明确资源/安全收益"
+      - "w/o topology 与 w/o evolution 的子集消融方向符合预期"
+  stage6:
+    name: "延迟后悔和 memory-specific credit"
+    depends_on: [stage4, stage5]
+    actions: [KEEP, DELETE]
+    credit_variants: [terminal_only, discounted_terminal, memory_specific, graph_propagated, shuffled_negative_control]
+    training_order: [contextual_ranking, offline_reinforce_or_actor_critic, PPO_or_GRPO_optional]
+    pass_if:
+      - "memory-specific 相比 terminal-only regret/WFR 相对下降 >=15%"
+      - "graph-propagated 在 held-out evolution/bridge 再带来可重复增益"
+      - "shuffled-credit 不产生同等增益"
+  stage7:
+    name: "可选 ARCHIVE/MERGE/REWIRE"
+    depends_on: [stage5]
+    start_only_if: ["stage2=PASS", "stage3=PASS", "stage5 in [PASS, PARTIAL]"]
+    actions: [ARCHIVE, MERGE, REWIRE]
+    rule: "REWIRE 仅 graph-retrieval 轨；MERGE 必须保留 provenance；ARCHIVE 是可逆软遗忘"
+  stage8:
+    name: "确认性全量实验和论文交付"
+    depends_on: [stage2, stage3, stage4, stage5]
+    datasets: [LoCoMo, AMEM_Forgetting_Benchmark, LongMemEvalS_optional, AppWorld_optional]
+    seeds: [1, 2, 3, 4, 5]
+    budgets: [0.1, 0.2, 0.4, 0.6, 0.8, 1.0]
+    outputs: ["main_tables", "pareto_figures", "ablation_figures", "claim_evidence_matrix", "reproduction_scripts"]
+
+global:
+  amem:
+    link_generation: true
+    memory_evolution: true
+    top_k_link: 10
+    top_k_retrieval: 10
+    retrieval_mode: faithful_flat
+  budget:
+    primary_unit: serialized_tokens
+    secondary_unit: serialized_bytes
+    recent_protected_k_conversation: 0
+    recent_protected_k_agent: 5
+  statistics:
+    bootstrap_reps: 10000
+    confidence: 0.95
+    multiple_testing: holm
+    grouped_split: true
+  integrity:
+    event_log: append_only_jsonl
+    state_hash: sha256
+    event_hash_chain: true
+    raw_results_mutable: false
+  required_run_files:
+    - run_manifest.json
+    - config.yaml
+    - git_commit.txt
+    - stdout.log
+    - stderr.log
+    - results.jsonl
+    - metrics.csv
+    - error_analysis.md
+    - gate.json
+
+metrics:
+  task: [token_f1, exact_match, bleu1, rouge_l, meteor, sbert, multihop_f1, temporal_f1]
+  retention: [imr_at_budget, wfr, bmr, roc_auc, pr_auc, brier, ece, budget_at_80_recall]
+  resource: [active_tokens, active_bytes, peak_ram, retrieval_latency_ms, end_to_end_latency_ms, llm_calls, estimated_cost]
+  graph: [gold_path_preservation, evolution_ancestor_recall, lineage_residual_rate, graph_edit_cost]
+
+security_and_privacy:
+  raw_sensitive_logs_local_only: true
+  redact_credentials_in_reports: true
+  exact_token_validation: "hash + length + masked preview only"
+  claim_scope: "功能性预算遗忘；除非 lineage rollback + residual probe 通过，不得声称完整 unlearning"
