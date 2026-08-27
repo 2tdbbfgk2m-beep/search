@@ -1,0 +1,57 @@
+{
+  "stage": "stage0",
+  "status": "BLOCKED",
+  "generated_at": "2026-08-27T10:30:00Z",
+  "run_ids": ["stage1_mock_smoke_v1"],
+  "preconditions": {
+    "plan_version": "1.0",
+    "work_branch": "research/stage1-instrumentation",
+    "baseline_commit": "0c8039f",
+    "user_decision_notes": "用户批准：先产出审计报告，同时并行实现 STAGE 1 代码（mock 验证）；正式运行待环境就绪"
+  },
+  "criteria": {
+    "end_to_end_real_component_smoke": {
+      "value": false,
+      "threshold": true,
+      "pass": false,
+      "blocking_reason": "无 LLM 后端（无 OPENAI_API_KEY / Ollama / vLLM）且无 sentence-transformers；wiring 层已用 FakeLLMController + stub 编码器验证通过（runs/raw/stage1_mock_smoke_v1），但不构成真实 smoke"
+    },
+    "every_memory_traceable_to_source_turns": {
+      "value": true,
+      "threshold": true,
+      "pass": true,
+      "evidence": "wrapper.add_note 强制要求 source_turn_ids；registry.turn_to_memories() 双向映射经测试验证（test_source_to_note_provenance）"
+    },
+    "faithful_track_distinguished_from_extension": {
+      "value": true,
+      "threshold": true,
+      "pass": true,
+      "evidence": "reports/stage0_audit.md §3：retrieve.mode 显式分离 flat_topk 与 raw_1hop_expansion 两轨；先行 feature 分支不作为复现基线"
+    },
+    "missing_models_data_have_fallback_or_blocked_record": {
+      "value": true,
+      "threshold": true,
+      "pass": true,
+      "evidence": "data_manifest/models.json 列出三个预声明 fallback 方案"
+    },
+    "retrieval_semantics_audit_completed": {
+      "value": true,
+      "threshold": true,
+      "pass": true,
+      "evidence": "links_used_in_retrieval=true（QA 路径 1-hop 扩展）；事件日志可重建调用链"
+    }
+  },
+  "uncertainties": [
+    "上游 analyze_content 的 re.sub bug 使笔记元数据在论文设置下静默退化为空壳（audit §5.1）；是否修复由研究者决定",
+    "LoCoMo 仅 10 对话子集；confirmatory 前需冻结完整版数据并重算 SHA-256"
+  ],
+  "blocking_issues": [
+    "无可用 LLM 后端：端到端真实 smoke 无法运行",
+    "sentence-transformers 未安装：真实嵌入检索无法运行"
+  ],
+  "next_stage_allowed": false,
+  "next_stage_conditions": [
+    "按 data_manifest/models.json 的方案 A/B/C 之一就绪 LLM 后端与嵌入栈",
+    "以真实组件重跑端到端 smoke 并将本 gate 相应 criteria 置 PASS"
+  ]
+}

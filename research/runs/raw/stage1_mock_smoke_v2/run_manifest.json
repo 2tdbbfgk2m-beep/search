@@ -1,0 +1,17 @@
+{
+  "stage": "stage1",
+  "kind": "mock_smoke_wiring",
+  "git_commit": "c56087be29872c9c8ad835f6942ad0d763d99792",
+  "stubbed_dependencies": [
+    "rank_bm25",
+    "sentence_transformers",
+    "litellm",
+    "transformers"
+  ],
+  "llm": "FakeLLMController (deterministic, no network)",
+  "conversation_turns": 5,
+  "questions": 3,
+  "top_k_retrieval": 3,
+  "run_id": "stage1_mock_smoke_v2",
+  "generated_at": "2026-08-27T11:20:54.508311+00:00"
+}

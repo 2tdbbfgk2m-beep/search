@@ -1,0 +1,199 @@
+analysis {'keywords': ['robotics', 'started', 'startup'], 'context': 'Alice moved to Berlin in 2019 and started...', 'tags': ['tag-7b4810', 'synthetic']}
+prompt_memory 
+                                You are an AI memory evolution agent responsible for managing and evolving a knowledge base.
+                                Analyze the the new memory note according to keywords and context, also with their several nearest neighbors memory.
+                                Make decisions about its evolution.  
+
+                                The new memory context:
+                                Alice moved to Berlin in 2019 and started...
+                                content: Alice moved to Berlin in 2019 and started working at a robotics startup.
+                                keywords: ['robotics', 'started', 'startup']
+
+                                The nearest neighbors memories:
+                                
+
+                                Based on this information, determine:
+                                1. Should this memory be evolved? Consider its relationships with other memories.
+                                2. What specific actions should be taken (strengthen, update_neighbor)?
+                                   2.1 If choose to strengthen the connection, which memory should it be connected to? Can you give the updated tags of this memory?
+                                   2.2 If choose to update_neighbor, you can update the context and tags of these memories based on the understanding of these memories. If the context and the tags are not updated, the new context and tags should be the same as the original ones. Generate the new context and tags in the sequential order of the input neighbors.
+                                Tags should be determined by the content of these characteristic of these memories, which can be used to retrieve them later and categorize them.
+                                Note that the length of new_tags_neighborhood must equal the number of input neighbors, and the length of new_context_neighborhood must equal the number of input neighbors.
+                                The number of neighbors is 0.
+                                Return your decision in JSON format with the following structure:
+                                {
+                                    "should_evolve": True or False,
+                                    "actions": ["strengthen", "update_neighbor"],
+                                    "suggested_connections": ["neighbor_memory_ids"],
+                                    "tags_to_update": ["tag_1",..."tag_n"], 
+                                    "new_context_neighborhood": ["new context",...,"new context"],
+                                    "new_tags_neighborhood": [["tag_1",...,"tag_n"],...["tag_1",...,"tag_n"]],
+                                }
+                                
+response {"should_evolve": false, "actions": [], "suggested_connections": [], "tags_to_update": [], "new_context_neighborhood": [], "new_tags_neighborhood": []} <class 'str'>
+response_json {'should_evolve': False, 'actions': [], 'suggested_connections': [], 'tags_to_update': [], 'new_context_neighborhood': [], 'new_tags_neighborhood': []} <class 'dict'>
+analysis {'keywords': ['technology', 'together', 'visited'], 'context': 'Bob visited Alice in Berlin and they toured...', 'tags': ['tag-f18414', 'synthetic']}
+prompt_memory 
+                                You are an AI memory evolution agent responsible for managing and evolving a knowledge base.
+                                Analyze the the new memory note according to keywords and context, also with their several nearest neighbors memory.
+                                Make decisions about its evolution.  
+
+                                The new memory context:
+                                Bob visited Alice in Berlin and they toured...
+                                content: Bob visited Alice in Berlin and they toured the museum of technology together.
+                                keywords: ['technology', 'together', 'visited']
+
+                                The nearest neighbors memories:
+                                memory index:0	 talk start time:202506011200	 memory content: Alice moved to Berlin in 2019 and started working at a robotics startup.	 memory context: Alice moved to Berlin in 2019 and started...	 memory keywords: ['robotics', 'started', 'startup']	 memory tags: ['tag-7b4810', 'synthetic']
+
+
+                                Based on this information, determine:
+                                1. Should this memory be evolved? Consider its relationships with other memories.
+                                2. What specific actions should be taken (strengthen, update_neighbor)?
+                                   2.1 If choose to strengthen the connection, which memory should it be connected to? Can you give the updated tags of this memory?
+                                   2.2 If choose to update_neighbor, you can update the context and tags of these memories based on the understanding of these memories. If the context and the tags are not updated, the new context and tags should be the same as the original ones. Generate the new context and tags in the sequential order of the input neighbors.
+                                Tags should be determined by the content of these characteristic of these memories, which can be used to retrieve them later and categorize them.
+                                Note that the length of new_tags_neighborhood must equal the number of input neighbors, and the length of new_context_neighborhood must equal the number of input neighbors.
+                                The number of neighbors is 1.
+                                Return your decision in JSON format with the following structure:
+                                {
+                                    "should_evolve": True or False,
+                                    "actions": ["strengthen", "update_neighbor"],
+                                    "suggested_connections": ["neighbor_memory_ids"],
+                                    "tags_to_update": ["tag_1",..."tag_n"], 
+                                    "new_context_neighborhood": ["new context",...,"new context"],
+                                    "new_tags_neighborhood": [["tag_1",...,"tag_n"],...["tag_1",...,"tag_n"]],
+                                }
+                                
+response {"should_evolve": true, "actions": ["strengthen", "update_neighbor"], "suggested_connections": [0], "tags_to_update": ["strengthened-ecb7bb"], "new_context_neighborhood": ["evolved-context-ecb7bb-0"], "new_tags_neighborhood": [["evolved-tag-ecb7bb-0"]]} <class 'str'>
+response_json {'should_evolve': True, 'actions': ['strengthen', 'update_neighbor'], 'suggested_connections': [0], 'tags_to_update': ['strengthened-ecb7bb'], 'new_context_neighborhood': ['evolved-context-ecb7bb-0'], 'new_tags_neighborhood': [['evolved-tag-ecb7bb-0']]} <class 'dict'>
+indices [0]
+analysis {'keywords': ['warehouse', 'launched', 'picking'], 'context': 'Alice s startup launched a warehouse robot that...', 'tags': ['tag-851885', 'synthetic']}
+prompt_memory 
+                                You are an AI memory evolution agent responsible for managing and evolving a knowledge base.
+                                Analyze the the new memory note according to keywords and context, also with their several nearest neighbors memory.
+                                Make decisions about its evolution.  
+
+                                The new memory context:
+                                Alice s startup launched a warehouse robot that...
+                                content: Alice's startup launched a warehouse robot that reduces picking errors.
+                                keywords: ['warehouse', 'launched', 'picking']
+
+                                The nearest neighbors memories:
+                                memory index:0	 talk start time:202506011200	 memory content: Alice moved to Berlin in 2019 and started working at a robotics startup.	 memory context: evolved-context-ecb7bb-0	 memory keywords: ['robotics', 'started', 'startup']	 memory tags: ['evolved-tag-ecb7bb-0']
+memory index:1	 talk start time:202506011210	 memory content: Bob visited Alice in Berlin and they toured the museum of technology together.	 memory context: Bob visited Alice in Berlin and they toured...	 memory keywords: ['technology', 'together', 'visited']	 memory tags: ['strengthened-ecb7bb']
+
+
+                                Based on this information, determine:
+                                1. Should this memory be evolved? Consider its relationships with other memories.
+                                2. What specific actions should be taken (strengthen, update_neighbor)?
+                                   2.1 If choose to strengthen the connection, which memory should it be connected to? Can you give the updated tags of this memory?
+                                   2.2 If choose to update_neighbor, you can update the context and tags of these memories based on the understanding of these memories. If the context and the tags are not updated, the new context and tags should be the same as the original ones. Generate the new context and tags in the sequential order of the input neighbors.
+                                Tags should be determined by the content of these characteristic of these memories, which can be used to retrieve them later and categorize them.
+                                Note that the length of new_tags_neighborhood must equal the number of input neighbors, and the length of new_context_neighborhood must equal the number of input neighbors.
+                                The number of neighbors is 2.
+                                Return your decision in JSON format with the following structure:
+                                {
+                                    "should_evolve": True or False,
+                                    "actions": ["strengthen", "update_neighbor"],
+                                    "suggested_connections": ["neighbor_memory_ids"],
+                                    "tags_to_update": ["tag_1",..."tag_n"], 
+                                    "new_context_neighborhood": ["new context",...,"new context"],
+                                    "new_tags_neighborhood": [["tag_1",...,"tag_n"],...["tag_1",...,"tag_n"]],
+                                }
+                                
+response {"should_evolve": true, "actions": ["strengthen", "update_neighbor"], "suggested_connections": [0], "tags_to_update": ["strengthened-d5196f"], "new_context_neighborhood": ["evolved-context-d5196f-0", "evolved-context-d5196f-1"], "new_tags_neighborhood": [["evolved-tag-d5196f-0"], ["evolved-tag-d5196f-1"]]} <class 'str'>
+response_json {'should_evolve': True, 'actions': ['strengthen', 'update_neighbor'], 'suggested_connections': [0], 'tags_to_update': ['strengthened-d5196f'], 'new_context_neighborhood': ['evolved-context-d5196f-0', 'evolved-context-d5196f-1'], 'new_tags_neighborhood': [['evolved-tag-d5196f-0'], ['evolved-tag-d5196f-1']]} <class 'dict'>
+indices [0 1]
+analysis {'keywords': ['computational', 'linguistics', 'studies'], 'context': 'Bob now lives in Vienna and studies computational...', 'tags': ['tag-d476bd', 'synthetic']}
+prompt_memory 
+                                You are an AI memory evolution agent responsible for managing and evolving a knowledge base.
+                                Analyze the the new memory note according to keywords and context, also with their several nearest neighbors memory.
+                                Make decisions about its evolution.  
+
+                                The new memory context:
+                                Bob now lives in Vienna and studies computational...
+                                content: Bob now lives in Vienna and studies computational linguistics.
+                                keywords: ['computational', 'linguistics', 'studies']
+
+                                The nearest neighbors memories:
+                                memory index:0	 talk start time:202506011200	 memory content: Alice moved to Berlin in 2019 and started working at a robotics startup.	 memory context: evolved-context-d5196f-0	 memory keywords: ['robotics', 'started', 'startup']	 memory tags: ['evolved-tag-d5196f-0']
+memory index:2	 talk start time:202506011220	 memory content: Alice's startup launched a warehouse robot that reduces picking errors.	 memory context: Alice s startup launched a warehouse robot that...	 memory keywords: ['warehouse', 'launched', 'picking']	 memory tags: ['strengthened-d5196f']
+memory index:1	 talk start time:202506011210	 memory content: Bob visited Alice in Berlin and they toured the museum of technology together.	 memory context: evolved-context-d5196f-1	 memory keywords: ['technology', 'together', 'visited']	 memory tags: ['evolved-tag-d5196f-1']
+
+
+                                Based on this information, determine:
+                                1. Should this memory be evolved? Consider its relationships with other memories.
+                                2. What specific actions should be taken (strengthen, update_neighbor)?
+                                   2.1 If choose to strengthen the connection, which memory should it be connected to? Can you give the updated tags of this memory?
+                                   2.2 If choose to update_neighbor, you can update the context and tags of these memories based on the understanding of these memories. If the context and the tags are not updated, the new context and tags should be the same as the original ones. Generate the new context and tags in the sequential order of the input neighbors.
+                                Tags should be determined by the content of these characteristic of these memories, which can be used to retrieve them later and categorize them.
+                                Note that the length of new_tags_neighborhood must equal the number of input neighbors, and the length of new_context_neighborhood must equal the number of input neighbors.
+                                The number of neighbors is 3.
+                                Return your decision in JSON format with the following structure:
+                                {
+                                    "should_evolve": True or False,
+                                    "actions": ["strengthen", "update_neighbor"],
+                                    "suggested_connections": ["neighbor_memory_ids"],
+                                    "tags_to_update": ["tag_1",..."tag_n"], 
+                                    "new_context_neighborhood": ["new context",...,"new context"],
+                                    "new_tags_neighborhood": [["tag_1",...,"tag_n"],...["tag_1",...,"tag_n"]],
+                                }
+                                
+response {"should_evolve": true, "actions": ["strengthen", "update_neighbor"], "suggested_connections": [0], "tags_to_update": ["strengthened-4c2248"], "new_context_neighborhood": ["evolved-context-4c2248-0", "evolved-context-4c2248-1", "evolved-context-4c2248-2"], "new_tags_neighborhood": [["evolved-tag-4c2248-0"], ["evolved-tag-4c2248-1"], ["evolved-tag-4c2248-2"]]} <class 'str'>
+response_json {'should_evolve': True, 'actions': ['strengthen', 'update_neighbor'], 'suggested_connections': [0], 'tags_to_update': ['strengthened-4c2248'], 'new_context_neighborhood': ['evolved-context-4c2248-0', 'evolved-context-4c2248-1', 'evolved-context-4c2248-2'], 'new_tags_neighborhood': [['evolved-tag-4c2248-0'], ['evolved-tag-4c2248-1'], ['evolved-tag-4c2248-2']]} <class 'dict'>
+indices [0 2 1]
+analysis {'keywords': ['warehouse', 'deployed', 'startup'], 'context': 'The warehouse robot from Alice s startup was...', 'tags': ['tag-fbc850', 'synthetic']}
+prompt_memory 
+                                You are an AI memory evolution agent responsible for managing and evolving a knowledge base.
+                                Analyze the the new memory note according to keywords and context, also with their several nearest neighbors memory.
+                                Make decisions about its evolution.  
+
+                                The new memory context:
+                                The warehouse robot from Alice s startup was...
+                                content: The warehouse robot from Alice's startup was deployed in Vienna last month.
+                                keywords: ['warehouse', 'deployed', 'startup']
+
+                                The nearest neighbors memories:
+                                memory index:2	 talk start time:202506011220	 memory content: Alice's startup launched a warehouse robot that reduces picking errors.	 memory context: evolved-context-4c2248-1	 memory keywords: ['warehouse', 'launched', 'picking']	 memory tags: ['evolved-tag-4c2248-1']
+memory index:0	 talk start time:202506011200	 memory content: Alice moved to Berlin in 2019 and started working at a robotics startup.	 memory context: evolved-context-4c2248-0	 memory keywords: ['robotics', 'started', 'startup']	 memory tags: ['evolved-tag-4c2248-0']
+memory index:1	 talk start time:202506011210	 memory content: Bob visited Alice in Berlin and they toured the museum of technology together.	 memory context: evolved-context-4c2248-2	 memory keywords: ['technology', 'together', 'visited']	 memory tags: ['evolved-tag-4c2248-2']
+memory index:3	 talk start time:202506011230	 memory content: Bob now lives in Vienna and studies computational linguistics.	 memory context: Bob now lives in Vienna and studies computational...	 memory keywords: ['computational', 'linguistics', 'studies']	 memory tags: ['strengthened-4c2248']
+
+
+                                Based on this information, determine:
+                                1. Should this memory be evolved? Consider its relationships with other memories.
+                                2. What specific actions should be taken (strengthen, update_neighbor)?
+                                   2.1 If choose to strengthen the connection, which memory should it be connected to? Can you give the updated tags of this memory?
+                                   2.2 If choose to update_neighbor, you can update the context and tags of these memories based on the understanding of these memories. If the context and the tags are not updated, the new context and tags should be the same as the original ones. Generate the new context and tags in the sequential order of the input neighbors.
+                                Tags should be determined by the content of these characteristic of these memories, which can be used to retrieve them later and categorize them.
+                                Note that the length of new_tags_neighborhood must equal the number of input neighbors, and the length of new_context_neighborhood must equal the number of input neighbors.
+                                The number of neighbors is 4.
+                                Return your decision in JSON format with the following structure:
+                                {
+                                    "should_evolve": True or False,
+                                    "actions": ["strengthen", "update_neighbor"],
+                                    "suggested_connections": ["neighbor_memory_ids"],
+                                    "tags_to_update": ["tag_1",..."tag_n"], 
+                                    "new_context_neighborhood": ["new context",...,"new context"],
+                                    "new_tags_neighborhood": [["tag_1",...,"tag_n"],...["tag_1",...,"tag_n"]],
+                                }
+                                
+response {"should_evolve": true, "actions": ["strengthen", "update_neighbor"], "suggested_connections": [2], "tags_to_update": ["strengthened-72f86a"], "new_context_neighborhood": ["evolved-context-72f86a-0", "evolved-context-72f86a-1", "evolved-context-72f86a-2", "evolved-context-72f86a-3"], "new_tags_neighborhood": [["evolved-tag-72f86a-0"], ["evolved-tag-72f86a-1"], ["evolved-tag-72f86a-2"], ["evolved-tag-72f86a-3"]]} <class 'str'>
+response_json {'should_evolve': True, 'actions': ['strengthen', 'update_neighbor'], 'suggested_connections': [2], 'tags_to_update': ['strengthened-72f86a'], 'new_context_neighborhood': ['evolved-context-72f86a-0', 'evolved-context-72f86a-1', 'evolved-context-72f86a-2', 'evolved-context-72f86a-3'], 'new_tags_neighborhood': [['evolved-tag-72f86a-0'], ['evolved-tag-72f86a-1'], ['evolved-tag-72f86a-2'], ['evolved-tag-72f86a-3']]} <class 'dict'>
+indices [2 0 1 3]
+run_id: stage1_mock_smoke_v2
+status: PASS
+criteria: {
+  "event_hash_chain": true,
+  "chronological_emission": true,
+  "reload_roundtrip": true,
+  "replay_boundary_consistency": true,
+  "replay_online_state_match": true,
+  "replay_registry_match": true,
+  "event_schema_valid": true,
+  "record_schema_valid": true,
+  "every_memory_traceable_to_source": true
+}
+provenance: {"conv1:turn1": ["m000001"], "conv1:turn2": ["m000002"], "conv1:turn3": ["m000003"], "conv1:turn4": ["m000004"], "conv1:turn5": ["m000005"]}
+missing_required_files: ['run_manifest.json', 'config.yaml', 'git_commit.txt', 'stdout.log', 'stderr.log', 'metrics.csv', 'gate.json']

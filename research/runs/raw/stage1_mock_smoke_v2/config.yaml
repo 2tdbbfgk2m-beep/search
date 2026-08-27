@@ -1,0 +1,21 @@
+amem:
+  enable_link_generation: true
+  enable_memory_evolution: true
+  retrieval_mode: faithful_flat_with_1hop_link_expansion
+  top_k_link: 5
+  top_k_retrieval: 5
+models:
+  answerer: mock_deterministic
+  embedding: stub-hash-encoder
+  evolver: FakeLLMController(deterministic)
+  linker: FakeLLMController(deterministic)
+  temperature: 0.0
+  writer: FakeLLMController(deterministic)
+notes:
+  embedding: stubbed
+  llm: fake deterministic; wiring validation only, no paper numbers
+  retrieval: real SimpleEmbeddingRetriever over stubbed/real encoder
+project:
+  name: amem_graph_forgetting
+  run_root: research/runs/raw
+  track: extension

@@ -1,0 +1,42 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-08-27T10:30:00Z",
+  "stage": "stage0",
+  "tracks": {
+    "reference": {
+      "purpose": "尽量复现 A-MEM 论文报告设置（GPT-4o-mini + all-MiniLM-L6-v2）",
+      "results_namespace": "reference",
+      "models": {
+        "writer_linker_evolver_answerer": {"name": "gpt-4o-mini", "status": "BLOCKED_no_api_key"}
+      },
+      "embedding": {"name": "all-MiniLM-L6-v2", "status": "BLOCKED_sentence_transformers_not_installed"}
+    },
+    "extension": {
+      "purpose": "主研究轨；所有策略共享同一固定模型",
+      "results_namespace": "extension",
+      "recommended_model": "Qwen2.5-3B-Instruct",
+      "recommended_backend": "ollama (qwen2.5:3b) 或 vLLM",
+      "status": "BLOCKED_backend_not_installed"
+    },
+    "wiring_mock": {
+      "purpose": "instrumentation wiring 验证专用，不产生论文数值，不与任何正式轨混表",
+      "llm": "FakeLLMController（确定性，按 prompt 哈希应答）",
+      "embedding": "确定性 hash-bag-of-words 编码器 stub（64 维）",
+      "status": "operational"
+    }
+  },
+  "decoding": {
+    "temperature_target": 0.0,
+    "determinism_note": "上游 MemoryNote 默认时间戳为 wall-clock；正式运行必须显式传 time 参数并记录随机性来源"
+  },
+  "tokenizer_for_budget": {
+    "primary": "nltk.word_tokenize",
+    "fallback": "whitespace split（无 punkt 数据时）",
+    "recorded_per_run": true
+  },
+  "environment_gaps": [
+    "OPENAI_API_KEY 未设置 -> reference track BLOCKED",
+    "ollama/vLLM 未安装 -> extension track BLOCKED",
+    "sentence-transformers/torch/litellm/rank_bm25 未安装 -> 真实检索与 LLM 调用 BLOCKED；已用 testsupport.stubs 提供 import 兼容"
+  ]
+}

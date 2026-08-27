@@ -1,0 +1,48 @@
+# STAGE 0 resolved config — 环境审计结论（2026-08-27）
+# 依计划书 §13.2 模板；所有 BLOCKED 值均有预声明 fallback（见 data_manifest/models.json）
+project:
+  name: amem_graph_forgetting
+  track: extension            # reference | extension；当前环境两者均 BLOCKED，仅 wiring_mock 可运行
+  git_commit: 0c8039f         # 复现基线（本地 main = 上游 WujiangXu/AgenticMemory @0c8039f）
+  run_root: research/runs/raw
+
+models:
+  writer: BLOCKED             # 待选定：gpt-4o-mini (reference) 或 Qwen2.5-3B-Instruct (extension)
+  linker: BLOCKED
+  evolver: BLOCKED
+  answerer: BLOCKED
+  judge: null
+  embedding: all-MiniLM-L6-v2 # 未安装 sentence-transformers；wiring 用确定性 stub
+  temperature: 0.0            # 目标值；上游 MemoryNote 时间戳的随机性来源已在 manifest 记录
+
+data:
+  primary: LoCoMo             # data/locomo10.json, sha256=79fa87e9...，10 对话子集
+  secondary: null
+  manifest: research/data_manifest/datasets.json
+  split: grouped              # 按完整 conversation 分组（§3.6）
+  dedup_exact_text: true
+
+amem:
+  enable_link_generation: true
+  enable_memory_evolution: true   # 覆盖式演化已由 instrumentation 的 EvolutionTracker 补版本留存
+  top_k_link: 5                   # process_memory 内部 find_related_memories k=5
+  top_k_retrieval: 10             # 正式 QA 设置固定 10（§3.4）；mock smoke 用 3/5 仅作 wiring
+  retrieval_mode: faithful_flat_with_1hop_link_expansion
+  # 审计结论：上游 QA 路径用 find_related_memories_raw —— flat top-k 种子 + 1-hop 链接扩展
+  # 拼入 prompt（每种子上限约 k+1）。事件日志 retrieve.mode 分离两轨。
+
+instrumentation:
+  event_log: append_only_jsonl      # 哈希链逐事件覆盖
+  state_hash: canonical_sha256      # 全 memory 快照规范化哈希
+  run_dir_contract: plan_3_1        # 8 个必需文件 + 文件名白名单 + 原子写入
+  provenance_required: true         # add_note 无 source_turn_ids 直接拒绝
+
+integrity:
+  raw_results_append_only: true
+  upstream_files_modified: security_hardening_only   # 6 处路径写入加固（reports/stage0_audit.md §5.0），实验行为零改动
+
+known_upstream_defects:             # 详见 reports/stage0_audit.md §5
+  - analyze_content_json_parse: FIXED_2026-08-27     # 已修复（import re + except 绑定）；复现基线相应更新
+  - links_stored_as_positional_indices               # instrumentation 已在观测层解析为稳定 ID
+  - evolution_overwrites_without_versions            # 已由 EvolutionTracker 补齐
+  - adversarial_protocol_unseeded_randomness         # 正式评估前必须确定性化（§8 决策点 3）

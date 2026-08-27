@@ -1,0 +1,18 @@
+{
+  "run_id": "stage0_audit",
+  "kind": "environment_and_repository_audit",
+  "stage": "stage0",
+  "git_commit_baseline": "0c8039f",
+  "audit_report": "../../reports/stage0_audit.md",
+  "checklist_evidence": {
+    "repo_license_recorded": "MIT, upstream WujiangXu/AgenticMemory @0c8039f",
+    "agents_md": "absent (recorded)",
+    "entrypoint_tested": "test_advanced*.py exist but require uninstalled deps; recorded as gap",
+    "minimal_sample_end_to_end": "wiring-only via mock (real smoke BLOCKED)",
+    "five_components_identified": "see audit report section 2",
+    "links_used_in_retrieval": true,
+    "low_temperature_support": "true in controllers (temperature param); timestamp randomness recorded",
+    "data_sha256_frozen": "locomo10 subset frozen; full LoCoMo pending before confirmatory"
+  },
+  "generated_at": "2026-08-27T10:30:00Z"
+}

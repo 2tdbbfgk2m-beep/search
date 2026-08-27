@@ -1,0 +1,68 @@
+{
+  "stage": "stage1",
+  "status": "PASS",
+  "run_ids": [
+    "stage1_mock_smoke_v2"
+  ],
+  "preconditions": {
+    "stage0_status": "BLOCKED_on_LLM_env",
+    "mock_wiring_only": true
+  },
+  "criteria": {
+    "event_hash_chain": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    },
+    "chronological_emission": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    },
+    "reload_roundtrip": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    },
+    "replay_boundary_consistency": {
+      "value": 1.0,
+      "threshold": 1.0,
+      "pass": true
+    },
+    "replay_online_state_match": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    },
+    "replay_registry_match": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    },
+    "event_schema_valid": {
+      "value": 0,
+      "threshold": 0,
+      "pass": true
+    },
+    "record_schema_valid": {
+      "value": 0,
+      "threshold": 0,
+      "pass": true
+    },
+    "every_memory_traceable_to_source": {
+      "value": true,
+      "threshold": true,
+      "pass": true
+    }
+  },
+  "uncertainties": [
+    "links 参与检索（raw 路径 1-hop 扩展），faithful_flat 与 graph_expansion 分支将在 reference/extension 正式运行中分轨",
+    "嵌入为 stub 或真实模型时检索结果不同；wiring 校验与两者无关"
+  ],
+  "blocking_issues": [
+    "无可用 LLM 后端（无 OPENAI_API_KEY/Ollama/vLLM）：端到端 reference smoke 待环境就绪"
+  ],
+  "next_stage_allowed": false,
+  "scope_note": "mock smoke validates instrumentation wiring; the stage1 PASS gate itself requires a real end-to-end run",
+  "generated_at": "2026-08-27T11:20:54.531581+00:00"
+}
